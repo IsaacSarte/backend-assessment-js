@@ -8,7 +8,7 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-export interface Env {
+// export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
 	//
@@ -20,14 +20,20 @@ export interface Env {
 	//
 	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
 	// MY_SERVICE: Fetcher;
-}
+// }
 
-export default {
-	async fetch(
-		request: Request,
-		env: Env,
-		ctx: ExecutionContext
-	): Promise<Response> {
-		return new Response("Hello World!");
-	},
-};
+import express from 'express';
+import cors from 'cors';
+import { config } from 'dotenv';
+
+import productRoutes from './routes/products'; // Import routes
+
+config() // Load environment variables from .env file
+
+const app = express()
+app.use(express.json())
+app.use(cors()) // Enable CORS
+
+app.use('/api/product', productRoutes);
+
+export default app;
