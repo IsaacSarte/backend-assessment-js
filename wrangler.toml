@@ -1,3 +1,8 @@
 name = "ma-project"
 main = "src/index.ts"
 compatibility_date = "2023-04-18"
+node_compat = true
+
+[vars]
+DATABASE_URL = "postgresql://neondb_owner:Q3eITOrsqYx9@ep-icy-wildflower-a1j1pujb.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+XAPIKEY = "FjeaZLvudPTdNXryAYT2fQ==JRXtkjQq0LiWHtM4"

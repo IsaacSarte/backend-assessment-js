@@ -8,32 +8,38 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-// export interface Env {
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace;
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace;
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket;
-	//
-	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-	// MY_SERVICE: Fetcher;
-// }
+import { handleDeleteProductRequest, handleProductsRequest } from "./routes/products";
+import { Env } from "./types/env";
 
-import express from 'express';
-import cors from 'cors';
-import { config } from 'dotenv';
+export default {
+	async fetch(
+		request: Request,
+		env: Env,
+		ctx: ExecutionContext
+	): Promise<Response> {
+		const url = new URL(request.url);
 
-import productRoutes from './routes/products'; // Import routes
+        // get products url
+		if (url.pathname === "/api/products") {
+			return handleProductsRequest(request);
+		}
 
-config() // Load environment variables from .env file
+        // add products url
+        if (url.pathname === "/api/products" && request.method === "POST") {
+            return handleProductsRequest(request);
+        }
 
-const app = express()
-app.use(express.json())
-app.use(cors()) // Enable CORS
+        // edit products url
+        if (url.pathname === "/api/products" && request.method === "PUT") {
+            return handleProductsRequest(request);
+        }
 
-app.use('/api/product', productRoutes);
-
-export default app;
+        // delete products url
+        if (url.pathname.startsWith("/api/products/") && request.method === "DELETE") {
+            const id = url.pathname.split("/")[3];
+            return handleDeleteProductRequest(Number(id));
+        }
+		
+		return new Response("Not Found", { status: 404 });
+	},
+};
