@@ -152,8 +152,7 @@ export const editProduct = async () => {
         })
 
         console.log('Successfully edited product title with sku in it into the database.');
-        const editedProducts = await db.select().from(productSchema);
-        return editedProducts;
+        return new Response('Successfully edited product title with sku in it into the database.', { status: 200 });
     } catch (error) {
         return new Error('Failed to edit products');
     }
